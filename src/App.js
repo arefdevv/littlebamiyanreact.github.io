@@ -936,67 +936,203 @@ const App = () => {
     );
   };
 
-  const BusinessPreviewModal = ({ business, onClose }) => {
-    return (
-      <div className="modal-overlay">
-        <div className="modal-content business-preview-modal">
-          <div className="modal-header">
-            <h2 className="modal-title">{business.name}</h2>
-            <button onClick={onClose} className="modal-close">
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-          <div className="modal-body">
-            <div className="business-preview-image">
-              <img src={business.image} alt={business.name} />
-              <span className="business-category">{business.category}</span>
+  // Update the BusinessPreviewModal component with fixed category tag styling for mobile
+
+const BusinessPreviewModal = ({ business, onClose }) => {
+  return (
+    <div className="modal-overlay" style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 9999
+    }}>
+      <div className="modal-content business-preview-modal" style={{
+        position: 'relative',
+        backgroundColor: 'white',
+        borderRadius: '8px',
+        maxWidth: '800px',
+        width: '90%',
+        maxHeight: '90vh',
+        overflow: 'auto',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+        margin: '20px'
+      }}>
+        <button 
+          onClick={onClose} 
+          className="modal-close"
+          style={{
+            position: 'absolute',
+            right: '15px',
+            top: '15px',
+            background: 'white',
+            border: 'none',
+            borderRadius: '50%',
+            width: '36px',
+            height: '36px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+            zIndex: 10000
+          }}
+        >
+          <X size={20} />
+        </button>
+        
+        <div className="modal-header" style={{ 
+          padding: '20px 50px 15px 20px',
+          borderBottom: '1px solid #eee',
+        }}>
+          <h2 className="modal-title" style={{ margin: 0 }}>{business.name}</h2>
+        </div>
+        
+        <div className="modal-body" style={{ padding: '20px' }}>
+          <div className="business-preview-image" style={{ 
+            position: 'relative',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            marginBottom: '20px'
+          }}>
+            <img 
+              src={business.image} 
+              alt={business.name} 
+              style={{ 
+                width: '100%', 
+                height: 'auto',
+                display: 'block' // Prevents extra space below image
+              }}
+            />
+            {/* Fixed category tag that won't stretch */}
+            <div style={{
+              position: 'absolute',
+              top: '10px',
+              left: '10px',
+              background: 'var(--accent, #ff6b6b)',
+              color: 'white',
+              padding: '5px 10px',
+              borderRadius: '4px',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              display: 'inline-block', // Prevents vertical stretching
+              height: 'auto',
+              width: 'auto'
+            }}>
+              {business.category}
             </div>
-            <div className="business-preview-details">
-              <p className="business-description">{business.description}</p>
-              <div className="business-info-grid">
-                <div className="business-info-item">
-                  <strong>Address:</strong>
-                  <p>{business.address}</p>
-                </div>
-                <div className="business-info-item">
-                  <strong>Phone:</strong>
-                  <p><a href={`tel:${business.phone}`}>{business.phone}</a></p>
-                </div>
-                <div className="business-info-item">
-                  <strong>Rating:</strong>
-                  <p className="business-rating">{business.rating} / 5</p>
-                </div>
+          </div>
+          
+          <div className="business-preview-details">
+            <p className="business-description" style={{ 
+              fontSize: '16px',
+              lineHeight: '1.6',
+              marginBottom: '20px'
+            }}>{business.description}</p>
+            
+            <div className="business-info-grid" style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '15px',
+              marginBottom: '20px'
+            }}>
+              <div className="business-info-item">
+                <strong>Address:</strong>
+                <p>{business.address}</p>
               </div>
-              
-              <div className="business-links">
-                <h3>Visit Us Online</h3>
-                <div className="social-links-grid">
-                  {business.website && (
-                    <a href={business.website} target="_blank" rel="noopener noreferrer" className="social-link">
-                      <Globe size={20} />
-                      <span>Website</span>
-                    </a>
-                  )}
-                  {business.facebook && (
-                    <a href={business.facebook} target="_blank" rel="noopener noreferrer" className="social-link">
-                      <Facebook size={20} />
-                      <span>Facebook</span>
-                    </a>
-                  )}
-                  {business.instagram && (
-                    <a href={business.instagram} target="_blank" rel="noopener noreferrer" className="social-link">
-                      <Instagram size={20} />
-                      <span>Instagram</span>
-                    </a>
-                  )}
-                </div>
+              <div className="business-info-item">
+                <strong>Phone:</strong>
+                <p><a href={`tel:${business.phone}`}>{business.phone}</a></p>
+              </div>
+              <div className="business-info-item">
+                <strong>Rating:</strong>
+                <p className="business-rating">{business.rating} / 5</p>
+              </div>
+            </div>
+            
+            <div className="business-links">
+              <h3 style={{ marginBottom: '15px' }}>Visit Us Online</h3>
+              <div className="social-links-grid" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                gap: '10px'
+              }}>
+                {business.website && (
+                  <a 
+                    href={business.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="social-link"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '8px 12px',
+                      backgroundColor: '#f5f5f5',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      color: 'var(--text, #333)'
+                    }}
+                  >
+                    <Globe size={20} />
+                    <span>Website</span>
+                  </a>
+                )}
+                {business.facebook && (
+                  <a 
+                    href={business.facebook} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="social-link"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '8px 12px',
+                      backgroundColor: '#f5f5f5',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      color: 'var(--text, #333)'
+                    }}
+                  >
+                    <Facebook size={20} />
+                    <span>Facebook</span>
+                  </a>
+                )}
+                {business.instagram && (
+                  <a 
+                    href={business.instagram} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="social-link"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '8px 12px',
+                      backgroundColor: '#f5f5f5',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      color: 'var(--text, #333)'
+                    }}
+                  >
+                    <Instagram size={20} />
+                    <span>Instagram</span>
+                  </a>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
   const BlogForm = () => {
     const [formData, setFormData] = useState(editingBlog || {
