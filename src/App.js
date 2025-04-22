@@ -447,46 +447,76 @@ const App = () => {
     </nav>
   );
 
-  const LoginPage = () => (
-    <section className="login-page" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-      <div className="container" style={{ maxWidth: '400px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Admin Login</h2>
-        <form onSubmit={handleLogin} style={{ background: 'white', padding: '2rem', borderRadius: '1rem', boxShadow: '0 15px 50px rgba(0,0,0,0.1)' }}>
-          <div className="form-group">
-            <label className="form-label">Email</label>
-            <input 
-              type="email" 
-              className="form-input"
-              value={loginCredentials.email}
-              onChange={(e) => setLoginCredentials({...loginCredentials, email: e.target.value})}
-              required
-              placeholder="Enter your email"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Password</label>
-            <input 
-              type="password" 
-              className="form-input"
-              value={loginCredentials.password}
-              onChange={(e) => setLoginCredentials({...loginCredentials, password: e.target.value})}
-              required
-              placeholder="Enter your password"
-            />
-          </div>
-          {loginError && (
-            <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>
-              {loginError}
+  const LoginPage = () => {
+    // Move the login state and handler into the component itself
+    const [localLoginState, setLocalLoginState] = useState({ 
+      email: '', 
+      password: '' 
+    });
+    const [localLoginError, setLocalLoginError] = useState('');
+  
+    // Local login handler that only updates parent state after submission
+    const handleLocalLogin = async (e) => {
+      e.preventDefault();
+      setLocalLoginError('');
+      
+      try {
+        await signInWithEmailAndPassword(
+          auth, 
+          localLoginState.email, 
+          localLoginState.password
+        );
+        
+        setCurrentPage('admin');
+        // Only update parent state after successful login
+        setLoginCredentials({ email: '', password: '' });
+      } catch (error) {
+        console.error('Login error:', error);
+        setLocalLoginError('Invalid credentials.');
+      }
+    };
+  
+    return (
+      <section className="login-page" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+        <div className="container" style={{ maxWidth: '400px' }}>
+          <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Admin Login</h2>
+          <form onSubmit={handleLocalLogin} style={{ background: 'white', padding: '2rem', borderRadius: '1rem', boxShadow: '0 15px 50px rgba(0,0,0,0.1)' }}>
+            <div className="form-group">
+              <label className="form-label">Email</label>
+              <input 
+                type="email" 
+                className="form-input"
+                value={localLoginState.email}
+                onChange={(e) => setLocalLoginState({...localLoginState, email: e.target.value})}
+                required
+                placeholder="Enter your email"
+              />
             </div>
-          )}
-          <button type="submit" className="form-submit" style={{ width: '100%' }}>Login</button>
-        </form>
-        <p style={{ textAlign: 'center', marginTop: '1rem' }}>
-          <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); }} style={{ color: 'var(--primary)' }}>← Back to Home</a>
-        </p>
-      </div>
-    </section>
-  );
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <input 
+                type="password" 
+                className="form-input"
+                value={localLoginState.password}
+                onChange={(e) => setLocalLoginState({...localLoginState, password: e.target.value})}
+                required
+                placeholder="Enter your password"
+              />
+            </div>
+            {localLoginError && (
+              <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>
+                {localLoginError}
+              </div>
+            )}
+            <button type="submit" className="form-submit" style={{ width: '100%' }}>Login</button>
+          </form>
+          <p style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); }} style={{ color: 'var(--primary)' }}>← Back to Home</a>
+          </p>
+        </div>
+      </section>
+    );
+  };
 
   const AdminPage = () => (
     <section className="admin-page" style={{ padding: '2rem 0', minHeight: '80vh' }}>
